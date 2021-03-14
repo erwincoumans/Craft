@@ -1813,11 +1813,15 @@ void login() {
     char identity_token[128] = {0};
     char access_token[128] = {0};
     if (db_auth_get_selected(username, 128, identity_token, 128)) {
+        printf("username=%s\n", username);
+    printf("identity_token=%s\n", identity_token);
+    printf("access_token=%s\n", access_token);
         printf("Contacting login server for username: %s\n", username);
         if (get_access_token(
             access_token, 128, username, identity_token))
         {
             printf("Successfully authenticated with the login server\n");
+            printf("logging in: %s, %s\n", username, access_token);
             client_login(username, access_token);
         }
         else {

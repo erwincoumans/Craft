@@ -21,13 +21,14 @@ size_t write_function(char *data, size_t size, size_t count, void *arg) {
 int get_access_token(
     char *result, int length, char *username, char *identity_token)
 {
-    static char url[] = "https://craft.michaelfogleman.com/api/1/identity";
+    static char url[] = "http://localhost:5000/api/1/identity";
     strncpy(result, "", length);
     CURL *curl = curl_easy_init();
     if (curl) {
         char post[MAX_POST_LENGTH] = {0};
         char response[MAX_RESPONSE_LENGTH] = {0};
         long http_code = 0;
+        printf("username=%s, identity_token=%s\n", username, identity_token);
         snprintf(post, MAX_POST_LENGTH, "username=%s&identity_token=%s",
             username, identity_token);
         #ifdef _WIN32
@@ -40,7 +41,12 @@ int get_access_token(
         CURLcode code = curl_easy_perform(curl);
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
         curl_easy_cleanup(curl);
+        printf("code=%d\n", code);
+        printf("http_code=%ld\n", http_code);
+        printf("error=%s\n", curl_easy_strerror(code));
+        
         if (code == CURLE_OK && http_code == 200) {
+          
             strncpy(result, response, length);
             return 1;
         }
